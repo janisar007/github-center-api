@@ -1,8 +1,9 @@
 import ghModel from "../models/gh.model.js";
 import userModel from "../models/user.model.js";
 import { getPat } from "../utils/encryption.util.js";
+import { responseData } from "../utils/response.util.js";
 
-export const getAllGh = async () => {
+export const getAllGh = async (req, res) => {
   try {
     const { userId } = req.query;
 
