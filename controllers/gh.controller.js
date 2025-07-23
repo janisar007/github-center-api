@@ -1,6 +1,5 @@
 import ghModel from "../models/gh.model.js";
 import userModel from "../models/user.model.js";
-import { getPat } from "../utils/encryption.util.js";
 import { responseData } from "../utils/response.util.js";
 
 export const getAllGh = async (req, res) => {
@@ -17,11 +16,6 @@ export const getAllGh = async (req, res) => {
         return responseData(res, 404, "user not found!", false, []);
     }
 
-    // const pat = await getPat(userId);
-
-    // if(!pat || pat === "") {
-    //     return responseData(res, 404, "Pat not found!", false, []);
-    // }
 
     const find_allgh = await ghModel.find({userId: userId});
 
