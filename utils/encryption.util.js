@@ -39,15 +39,15 @@ export function decrypt(base64Ciphertext) {
 }
 
 
-export const getPat = async (userId) => {
+export const getPat = async (userId, username) => {
     try {
 
-        const find_pat = await patModel.findOne({userId: userId});
+        const find_pat = await patModel.findOne({userId: userId, githubUserName: username});
         if(!find_pat) {
             return ""
         }
 
-        return encrypt(find_pat?.pat);
+        return decrypt(find_pat?.pat);
         
     } catch (error) {
 

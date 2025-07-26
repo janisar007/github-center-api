@@ -16,6 +16,10 @@ export const savePat = async (req, res) => {
       return responseData(res, 400, "userId is required!", false, []);
     }
 
+    if (!clerkId) {
+      return responseData(res, 400, "clerkId is required!", false, []);
+    }
+
     if (!patName) {
       return responseData(res, 400, "patName is required!", false, []);
     }

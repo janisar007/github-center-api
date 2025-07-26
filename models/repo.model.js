@@ -12,14 +12,30 @@ const repoSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   repo_name: {
     type: String,
   },
-  accUrl: {
+  node_id: {
     type: String,
-    required: true,
+  },
+  description: {
+    type: String,
+  },
+  visibility: {
+    type: String,
+  },
+  repo_id: {
+    type: Number,
+  },
+  repo_updated_at: {
+    type: String,
+  },
+  repo_updated_at: {
+    type: String,
+  },
+  is_selected: {
+    type: Boolean,
   },
   createdAt: { type: Date, default: Date.now },
 });
