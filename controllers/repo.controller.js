@@ -182,3 +182,134 @@ export const postSelectedAndRemoveUnseclectedRepos = async (req, res) => {
     );
   }
 };
+
+export const getRepoPrWorkflowInfo = async (req, res) => {
+  const { repos, username, userId } = req.body;
+
+  if (!repos?.length) {
+    return responseData(res, 400, "Repos are required!", false, []);
+  }
+
+  const pat = await getPat(userId, username);
+
+
+
+  const octokit = new Octokit({ auth: pat });
+  const allPRsWithWorkflows = {};
+
+  try {
+    const find_user = await userModel.findById(userId);
+
+    if (!find_user) {
+      return responseData(res, 404, "user not found!", false, []);
+    }
+    //todo: check if the repo is added or not.
+
+    await Promise.all(
+      repos.map(async (repo) => {
+        try {
+          const prs = await octokit.paginate(octokit.rest.pulls.list, {
+            owner: repo.owner.login,
+            repo: repo.name,
+            state: "open",
+            per_page: 100,
+          });
+
+          allPRsWithWorkflows[repo.full_name] = await Promise.all(
+            prs.map(async (pr) => {
+              let workflows = [];
+
+              try {
+                // Fetch all workflow runs of event 'pull_request'
+                const workflowRuns = await octokit.paginate(
+                  octokit.rest.actions.listWorkflowRunsForRepo,
+                  {
+                    owner: repo.owner.login,
+                    repo: repo.name,
+                    event: "pull_request",
+                    per_page: 100,
+                  }
+                );
+
+                // Filter those triggered by this PR
+                const prRuns = workflowRuns.filter((run) =>
+                  run.pull_requests.some((p) => p.number === pr.number)
+                );
+
+                // Fetch jobs for each run
+                workflows = await Promise.all(
+                  prRuns.map(async (run) => {
+                    try {
+                      const jobs = await octokit.paginate(
+                        octokit.rest.actions.listJobsForWorkflowRun,
+                        {
+                          owner: repo.owner.login,
+                          repo: repo.name,
+                          run_id: run.id,
+                        }
+                      );
+
+                      return {
+                        id: run.id,
+                        name: run.name,
+                        status: run.status,
+                        conclusion: run.conclusion,
+                        created_at: run.created_at,
+                        updated_at: run.updated_at,
+                        html_url: run.html_url,
+                        jobs: jobs.map((job) => ({
+                          id: job.id,
+                          name: job.name,
+                          status: job.status,
+                          conclusion: job.conclusion,
+                          started_at: job.started_at,
+                          completed_at: job.completed_at,
+                          steps: job.steps,
+                        })),
+                      };
+                    } catch (jobError) {
+                      console.error(`Error fetching jobs for run ${run.id}:`, jobError);
+                      return {
+                        id: run.id,
+                        error: jobError.message,
+                      };
+                    }
+                  })
+                );
+              } catch (workflowError) {
+                console.warn(`No workflows found or failed for PR #${pr.number} in ${repo.full_name}`);
+              }
+
+              return {
+                pr: {
+                  number: pr.number,
+                  title: pr.title,
+                  state: pr.state,
+                  merged: pr.merged,
+                  created_at: pr.created_at,
+                  updated_at: pr.updated_at,
+                  user: {
+                    login: pr.user.login,
+                    html_url: pr.user.html_url,
+                  },
+                  html_url: pr.html_url,
+                },
+                workflows: workflows.length > 0 ? workflows : null,
+              };
+            })
+          );
+        } catch (repoError) {
+          console.error(`Error fetching PRs for ${repo.full_name}:`, repoError);
+          allPRsWithWorkflows[repo.full_name] = { error: repoError.message };
+        }
+      })
+    );
+
+    return responseData(res, 200, "Prs and workflow found successfully!", true, { pullRequests: allPRsWithWorkflows });
+
+  } catch (globalError) {
+    console.error("Global error:", globalError);
+    return responseData(res, 500, "Something went wrong in getRepoPrWorkflowInfo!", false, []);
+  }
+};
+
