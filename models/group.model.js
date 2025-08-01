@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ghSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -9,18 +9,17 @@ const ghSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  username: {
+  ghUsername: {
     type: String,
     required: true,
   },
-  avatarUrl: {
-    type: String,
-  },
-  accUrl: {
+  groupName: {
     type: String,
     required: true,
   },
+  repoIds: [],
+
   createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.model("gh", ghSchema);
+export default mongoose.model("Group", groupSchema);

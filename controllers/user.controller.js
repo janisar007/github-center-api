@@ -15,12 +15,17 @@ export const getUserInfo = async (req, res) => {
         return responseData(res, 400, "email is required!", false, []);
     }
 
-    const find_user = await userModel.findOne({clerkId, email});
-
-    if(!find_user) {
-        return responseData(res, 404, "user not found!", false, []);
+    try {
+        const find_user = await userModel.findOne({clerkId, email});
+    
+        if(!find_user) {
+            return responseData(res, 404, "user not found!", false, []);
+        }
+    
+        return responseData(res, 200, "user found successfully", true, find_user);
+        
+    } catch (error) {
+        return responseData(res, 500, "Something went wrong getUserInfo", false, []);
+        
     }
-
-    return responseData(res, 200, "user found successfully", true, find_user);
-
 }

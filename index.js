@@ -11,6 +11,7 @@ import repoRouter from "./routes/repo.route.js";
 import patRouter from "./routes/pat.route.js";
 import userRouter from "./routes/user.route.js";
 import ghRouter from "./routes/gh.route.js";
+import groupRouter from "./routes/group.route.js";
 
 const app = express();
 const corsOptions = {
@@ -64,6 +65,7 @@ app.use("/api/repo", repoRouter);
 app.use("/api/pat", patRouter);
 app.use("/api/users", userRouter);
 app.use("/api/gh", ghRouter);
+app.use("/api/group", groupRouter);
 
 // Webhook routes ->
 app.use("/webhook/users", userWebhook);

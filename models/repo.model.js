@@ -37,6 +37,9 @@ const repoSchema = new mongoose.Schema({
   is_selected: {
     type: Boolean,
   },
+  group_id: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
