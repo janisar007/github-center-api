@@ -2,10 +2,11 @@ import { responseData } from "../utils/response.util.js";
 import ghModel from "../models/gh.model.js";
 import userModel from "../models/user.model.js";
 import groupModel from "../models/group.model.js";
+import repoModel from "../models/repo.model.js";
 
 export const createGroupandAddRepo = async (req, res) => {
   try {
-    const { userId, groupName, ghUsername, clerkId, repoIds } = req.body;
+    const { userId, groupName, ghUsername, clerkId, repositories } = req.body;
 
     if (!userId) {
       return responseData(res, 400, "userId is required!", false, []);
@@ -23,9 +24,9 @@ export const createGroupandAddRepo = async (req, res) => {
       return responseData(res, 400, "ghUsername is required!", false, []);
     }
 
-    if (!repoIds || repoIds.length === 0) {
-      return responseData(res, 400, "Include at least one repository!", false, []);
-    }
+    // if (!repoIds || repoIds.length === 0) {
+    //   return responseData(res, 400, "Include at least one repository!", false, []);
+    // }
 
     const find_user = await userModel.findById(userId);
     if (!find_user) {
@@ -46,22 +47,24 @@ export const createGroupandAddRepo = async (req, res) => {
         clerkId,
         ghUsername,
         groupName,
-        repoIds,
+        // repoIds,
       });
     } else {
       // Update the group's repoIds if needed (optional)
-      const updatedRepoIds = [...new Set([...group.repoIds, ...repoIds])];
-      group.repoIds = updatedRepoIds;
+      // const updatedRepoIds = [...new Set([...group.repoIds, ...repoIds])];
+      // group.repoIds = updatedRepoIds;
       await group.save();
     }
 
     // Update all repos to assign the group_id
-    await repoModel.updateMany(
-      { repo_id: { $in: repoIds }, userId: userId },
-      { $set: { group_id: group._id } }
-    );
+    if(repositories && repositories.length > 0) {
+      await repoModel.updateMany(
+        { _id: { $in: repositories }, userId: userId },
+        { $set: { group_id: group._id } }
+      );
+    }
 
-    return responseData(res, 200, "Group assignment completed.", true, []);
+    return responseData(res, 200, "Group created completed.", true, []);
 
   } catch (error) {
     console.error("createGroupandAddRepo error:", error);
@@ -122,7 +125,7 @@ export const updateGroup = async (req, res) => {
 
 export const deleteGroup = async (req, res) => {
   try {
-    const { groupId, userId, ghUsername } = req.body;
+    const { groupId, userId, ghUsername } = req.query;
 
     if (!groupId) {
       return responseData(res, 400, "groupId is required!", false, []);
@@ -176,5 +179,41 @@ export const getAllGroups = async (req, res) => {
   } catch (error) {
     console.error("getGroupsByGithubUsername error:", error);
     return responseData(res, 500, "Something went wrong getAllGroups.", false, []);
+  }
+};
+
+
+export const removeRepoFromGroup = async (req, res) => {
+  try {
+    const { userId, repoId, ghUsername } = req.body;
+
+    if (!userId) {
+      return responseData(res, 400, "userId is required!", false, []);
+    }
+    if (!repoId) {
+      return responseData(res, 400, "repoId is required!", false, []);
+    }
+    if (!ghUsername) {
+      return responseData(res, 400, "ghUsername is required!", false, []);
+    }
+
+    // Find the repository to verify it exists and belongs to the user
+    const repo = await repoModel.findOne({ _id: repoId, userId });
+    if (!repo) {
+      return responseData(res, 404, "Repository not found or doesn't belong to the user.", false, []);
+    }
+
+    if (!repo.group_id) {
+      return responseData(res, 400, "This repository is not assigned to any group.", false, []);
+    }
+
+    // Remove the group reference from the repository
+    repo.group_id = null;
+    await repo.save();
+
+    return responseData(res, 200, "Repository removed successfully.", true, []);
+  } catch (error) {
+    console.error("removeRepoFromGroup error:", error);
+    return responseData(res, 500, "Something went wrong in removeRepoFromGroup", false, []);
   }
 };

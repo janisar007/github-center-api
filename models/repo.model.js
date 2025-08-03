@@ -39,6 +39,7 @@ const repoSchema = new mongoose.Schema({
   },
   group_id: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
   },
   createdAt: { type: Date, default: Date.now },
 });
