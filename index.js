@@ -43,10 +43,38 @@ app.use((req, res, next) => {
 app.use(clerkMiddleware());
 
 // MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("📗 MongoDB connected"))
-  .catch((err) => console.error("Mongo Error:", err));
+const MONGO_URI = process.env.MONGO_URI;
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectToDatabase() {
+  if (cached.conn) {
+    console.log("✅ Reusing existing MongoDB connection");
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGO_URI, {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 15000,
+    });
+  } 
+
+  try {
+    cached.conn = await cached.promise;
+    console.log("✅ New MongoDB connection established");
+    return cached.conn;
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    throw err;
+  }
+}
+
+connectToDatabase();
 
 // Public route
 app.get("/api/public", (req, res) => {
