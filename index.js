@@ -58,7 +58,7 @@ async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI, {
+    cached.promise = await mongoose.connect(MONGO_URI, {
       bufferCommands: false,
       serverSelectionTimeoutMS: 15000,
     });
@@ -74,7 +74,7 @@ async function connectToDatabase() {
   }
 }
 
-connectToDatabase();
+await connectToDatabase();
 
 // Public route
 app.get("/api/public", (req, res) => {
