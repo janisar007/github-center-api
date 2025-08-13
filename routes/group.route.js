@@ -5,7 +5,7 @@ const router = Router();
 
 router.route("/get/allgroups").get(getAllGroups);
 router.route("/post/creategroupandaddrepo").post(createGroupandAddRepo);
-router.route("/put/group").put(updateGroup);
+router.route("/put/group").put(updateGroup); 
 router.route("/delete/group").delete(deleteGroup);
 router.route("/remove/fromgroup").put(removeRepoFromGroup);
 
