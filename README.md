@@ -3,6 +3,8 @@
 This is the backend service for **GitHub Center**, built with **Node.js**, **Express.js**, **MongoDB**, and **Clerk Authentication**.  
 It provides secure APIs for managing GitHub accounts, repositories, groups, Personal Access Tokens (PAT), and user authentication.
 
+**Note:** To understand more about the application and to Set up Frontend read [README](https://github.com/janisar007/githubcenter-client)
+
 ---
 
 ## 🚀 Overview
@@ -65,8 +67,8 @@ The backend is responsible for:
 
 1. **Clone the repository**
         ```bash
-        git clone https://github.com/your-username/github-center-backend.git
-        cd github-center-backend
+        git clone https://github.com/janisar007/github-center-api.git
+        cd github-center-api
 
 
 2. **Install dependencies**
@@ -95,6 +97,7 @@ Note:
 4. **Setting Up Clerk Webhook**
 
 The backend listens for a **Clerk webhook** when a new user registers.
+You can go into configure tab of your application then in the webhook option set up the webhook by using your deplyed / ngrok backend url (ngrok set up is below. it is only for development.)
 
 ---
 
@@ -127,7 +130,7 @@ The backend listens for a **Clerk webhook** when a new user registers.
         ```bash
         https://your-ngrok-url.ngrok-free.app/create
 
-5. **You can persist this ngrok url other wise everytime you expose your port with command 3, you will get different url**
+5. **You can persist this ngrok url other wise everytime you expose your port with command 3, you will get a different url**
 
 ## 📸 Screenshots / Demo
 
