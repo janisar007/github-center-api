@@ -94,14 +94,16 @@ Note:
 - **ENCRYPTION_KEY** must be exactly 32 characters for AES-256 encryption.
 - **CLERK_SIGN_IN_URL** and **LOGIN_URL** must point to your frontend routes.
 
-4. **Setting Up Clerk Webhook**
+---
+
+## Setting Up Clerk Webhook
 
 The backend listens for a **Clerk webhook** when a new user registers.
 You can go into configure tab of your application then in the webhook option set up the webhook by using your deplyed / ngrok backend url (ngrok set up is below. it is only for development.)
 
----
 
-## 📜 Webhook Flow
+
+### 📜 Webhook Flow
 
 1. **User signs up** in the frontend via Clerk.
 2. Clerk sends a **POST** request to `/create` endpoint with user data.
@@ -114,21 +116,21 @@ You can go into configure tab of your application then in the webhook option set
 > Clerk requires a **public URL** for webhooks.
 
 1. **Install ngrok**
-        ```bash
-        npm install -g ngrok
+  ```bash
+  npm install -g ngrok
 
 
 2. **Start your backend**
-        ```bash
-        npm run start
+   ```bash
+   npm run start
 
 3. **Run ngrok to expose your local server**
-        ```bash
-        ngrok http 5000
+   ```bash
+   ngrok http 5000
 
 4. **Copy the ngrok HTTPS URL and set it as your webhook URL in Clerk Dashboard**
-        ```bash
-        https://your-ngrok-url.ngrok-free.app/create
+   ```bash
+   https://your-ngrok-url.ngrok-free.app/create
 
 5. **You can persist this ngrok url other wise everytime you expose your port with command 3, you will get a different url**
 
