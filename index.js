@@ -15,7 +15,7 @@ import groupRouter from "./routes/group.route.js";
 
 const app = express();
 const corsOptions = {
-  origin: "https://githubcenter.vercel.app",
+  origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Important for cookies/sessions
   allowedHeaders: [
