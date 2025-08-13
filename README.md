@@ -101,22 +101,22 @@ The backend listens for a **Clerk webhook** when a new user registers.
 ##### 1. Install ngrok
 
     ```bash
-        npm install -g ngrok
+    npm install -g ngrok
 
 ##### 2. Start your backend
 
     ```bash
-        npm run start
+    npm run start
 
 ##### 3. Run ngrok to expose your local server
 
     ```bash
-        ngrok http 5000
+    ngrok http 5000
 
 ##### 4. Copy the ngrok HTTPS URL and set it as your webhook URL in Clerk Dashboard.
 
     ```bash
-        https://your-ngrok-url.ngrok-free.app/create
+    https://your-ngrok-url.ngrok-free.app/create
 
 ##### 5. You can persist this ngrok url other wise everytime you expose your port with command 3, you will get different url.
 
