@@ -66,27 +66,27 @@ The backend is responsible for:
 ## 📦 Installation & Setup
 
 1. **Clone the repository**
-        ```bash
-        git clone https://github.com/janisar007/github-center-api.git
-        cd github-center-api
+   ```bash
+   git clone https://github.com/janisar007/github-center-api.git
+   cd github-center-api
 
 
 2. **Install dependencies**
-        ```bash
-        npm install
+   ```bash
+   npm install
 
 
 3. **Environment Variables (.env)**
-        ```bash
-        PORT=5000
-        MONGO_URI=your_mongo_connection_string
+   ```bash
+   PORT=5000
+   MONGO_URI=your_mongo_connection_string
 
-        CLERK_SECRET_KEY=your_clerk_secret_key (start with sk_test)
-        CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key (start with pk_test)
-        CLERK_SIGN_IN_URL=your_clerk_sign_in_url (ie. http://localhost:5173/signin)
-        LOGIN_URL=your_frontend_login_url (ie. http://localhost:5173)
+   CLERK_SECRET_KEY=your_clerk_secret_key (start with sk_test)
+   CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key (start with pk_test)
+   CLERK_SIGN_IN_URL=your_clerk_sign_in_url (ie. http://localhost:5173/signin)
+   LOGIN_URL=your_frontend_login_url (ie. http://localhost:5173)
 
-        ENCRYPTION_KEY=32_character_secret_key (ie. 781w8232d9ed4edfabcf9ed2b1a0eecb0e3tt96d3857f6ef1c53b2cf7a3fc1o5)
+   ENCRYPTION_KEY=32_character_secret_key (ie. 781w8232d9ed4edfabcf9ed2b1a0eecb0e3tt96d3857f6ef1c53b2cf7a3fc1o5)
 
 
 Note:
