@@ -12,6 +12,7 @@ import patRouter from "./routes/pat.route.js";
 import userRouter from "./routes/user.route.js";
 import ghRouter from "./routes/gh.route.js";
 import groupRouter from "./routes/group.route.js";
+import prRouter from "./routes/pr.route.js";
 
 const app = express();
 const corsOptions = {
@@ -94,6 +95,7 @@ app.use("/api/pat", patRouter);
 app.use("/api/users", userRouter);
 app.use("/api/gh", ghRouter);
 app.use("/api/group", groupRouter);
+app.use("/api/pr", prRouter);
 
 // Webhook routes ->
 app.use("/webhook/users", userWebhook);
